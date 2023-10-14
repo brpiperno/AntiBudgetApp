@@ -98,9 +98,15 @@ public interface IAccount {
 
 
     /**
-     * Generate a list of transaction names that are in the model.
-     * @return A list of strings of transaction names in the model.
+     * Generate a list of deep copies of transaction that are in the account.
+     * @return A list of deepcopies of transactions in the account.
      */
-    List<ITransaction> getTransactions();
+    List<ITransaction> getCopyTransactions();
+
+    /**
+     * Provide a deep copy of the account.
+     * @return a deep copy of the account.
+     */
+    IAccount copy();
 
 }

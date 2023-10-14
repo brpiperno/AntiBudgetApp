@@ -186,15 +186,25 @@ public class SimpleAccountTest {
     }
 
     @Test
-    public void testGetTransactions() {
-        List<ITransaction> actual = a1.getTransactions();
+    public void testGetCopyTransactions() {
+        List<ITransaction> a1TransactionsCopy = a1.getCopyTransactions();
         for (ITransaction t: LoT1) {
-            assertTrue(actual.contains(t));
+            assertTrue(a1TransactionsCopy.contains(t));
         }
-        for (ITransaction t: actual) {
+        for (ITransaction t: a1TransactionsCopy) {
             assertTrue(LoT1.contains(t));
         }
+        //Test that this is true for accounts with empty transactions
         IAccount emptyAccount = new SimpleAccount("new account");
-        assertTrue(emptyAccount.getTransactions().isEmpty());
+        assertTrue(emptyAccount.getCopyTransactions().isEmpty());
+        //Test that the given transactions are deep copies
+        a1TransactionsCopy.get(0).setName("new Name");
+        assertFalse(a1.hasTransactionOfName(a1TransactionsCopy.get(0).getName()));
+    }
+
+    @Test
+    public void testCopy() {
+        a2 = a1.copy();
+        assertEquals(a2, a1);
     }
 }

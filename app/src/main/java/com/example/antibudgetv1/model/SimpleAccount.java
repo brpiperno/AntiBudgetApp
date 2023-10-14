@@ -1,6 +1,7 @@
 package com.example.antibudgetv1.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,9 +83,7 @@ public class SimpleAccount implements IAccount{
     @Override
     public ITransaction getTransactionCopy(String name) {
         checkTransaction(name);
-        ITransaction t = this.transactions.get(name);
-        ITransaction copy = new SimpleTransaction(t.getName(), t.getValue(), t.getDescription());
-        return copy;
+        return this.transactions.get(name).copy();
     }
 
     @Override
@@ -108,8 +107,17 @@ public class SimpleAccount implements IAccount{
     }
 
     @Override
-    public List<ITransaction> getTransactions() {
-        return this.transactions.values().stream().collect(Collectors.toList());
+    public List<ITransaction> getCopyTransactions() {
+        List<ITransaction> copies = new ArrayList<>();
+        for (ITransaction t : this.transactions.values()) {
+            copies.add(t.copy());
+        }
+        return copies;
+    }
+
+    @Override
+    public IAccount copy() {
+        return new SimpleAccount(this.name, this.description, this.getCopyTransactions());
     }
 
     private void checkTransaction(String name) {

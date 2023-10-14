@@ -44,4 +44,10 @@ public interface ITransaction {
      * @throws IllegalArgumentException if a null is provided.
      */
     void setDescription(String description);
+
+    /**
+     * Return a deep copy of the transaction.
+     * @return
+     */
+    ITransaction copy();
 }

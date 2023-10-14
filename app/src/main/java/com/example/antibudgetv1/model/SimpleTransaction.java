@@ -55,6 +55,11 @@ public class SimpleTransaction implements ITransaction{
         this.description = description;
     }
 
+    @Override
+    public ITransaction copy() {
+        return new SimpleTransaction(this.name, this.value, this.description);
+    }
+
     private void checkNull(Object o) {
         if (o == null) {
             throw new IllegalArgumentException("Provided object is null");

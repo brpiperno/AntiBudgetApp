@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 public class SimpleTransactionTest {
@@ -49,23 +50,26 @@ public class SimpleTransactionTest {
 
     @Test
     public void testSetValue() {
-        start();
         t1.setValue(0f);
         assertEquals(t1.getValue(), 0f, TEST_DELTA);
     }
 
     @Test
     public void testSetDescription() {
-        start();
         t1.setDescription("New Description");
         assertEquals(t1.getDescription(), "New Description");
     }
 
     @Test
     public void testEquals() {
-        start();
-        assertFalse(t1.equals(t2));
-        assertFalse(t1.equals(""));
-        assertTrue(t2.equals(t3));
+        assertNotEquals(t1, t2);
+        assertEquals(t2, t3);
+    }
+
+    @Test
+    public void testCopy() {
+        t3 = t1.copy();
+        assertEquals(t1, t3);
+
     }
 }

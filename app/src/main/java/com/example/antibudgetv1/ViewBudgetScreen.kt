@@ -84,7 +84,7 @@ fun BudgetView(account: IAccount, modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.spacedBy(4.dp),
         modifier = modifier
     ){
-        items(items = account.transactions, itemContent = { item ->
+        items(items = account.copyTransactions, itemContent = { item ->
             TransactionCard(transaction = item)
         })
     }

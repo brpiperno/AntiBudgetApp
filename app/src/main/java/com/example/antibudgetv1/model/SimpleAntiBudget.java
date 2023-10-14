@@ -1,61 +1,73 @@
 package com.example.antibudgetv1.model;
 
+import com.example.antibudgetv1.Utils;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class SimpleAntiBudget implements IAntiBudget{
-    private List<IAccount> accountList;
+    private Map<String, IAccount> accounts;
     private String name;
     private String description;
 
     public SimpleAntiBudget(String name, String description, List<IAccount> accounts) {
+        Utils.checkNull(name);
+        Utils.checkNull(description);
+        for (IAccount a : accounts) {
+            Utils.checkNull(a);
+        }
         this.name = name;
         this.description = description;
-        this.accountList = accounts;
+        this.accounts = new HashMap<>();
+        for (IAccount a : accounts) {
+            this.addAccount(a);
+        }
     }
     public SimpleAntiBudget(String name, String description) {
-        new SimpleAntiBudget(name, description, new ArrayList<IAccount>());
+        Utils.checkNull(name);
+        Utils.checkNull(description);
+        this.name = name;
+        this.description = description;
+        this.accounts = new HashMap<>();
     }
 
     public SimpleAntiBudget(String name) {
-        new SimpleAntiBudget(name, "", new ArrayList<IAccount>());
+        this(name, "");
     }
 
     @Override
     public void addAccount(IAccount account) {
-        checkAccount(account, false);
-        this.accountList.add(account);
+        safeGetAccount(account, false);
+        this.accounts.put(account.getName(), account);
     }
 
     @Override
     public void deleteAccount(IAccount account) {
-        checkAccount(account, true);
-        this.accountList.remove(account);
+        this.accounts.remove(safeGetAccount(account, true).getName());
     }
 
     @Override
-    public IAccount getAccount(String name) {
-        for (IAccount a : this.accountList) {
-            if (a.getName().equals(name)) {
-                return a;
-            }
+    public IAccount getAccountCopy(String name) {
+        Utils.checkNull(name);
+        if (this.accounts.containsKey(name)) {
+            IAccount copy;
+            return accounts.get(name);
         }
-        throw new IllegalArgumentException(String.format(
-                "Could not find account with name: %s", name));
+        throw new IllegalArgumentException(
+                String.format("Does not contain account with name: %s", name));
     }
 
     @Override
     public IAccount getAccount(IAccount account) {
-        return checkAccount(account, true);
+        return safeGetAccount(account, true);
     }
 
     @Override
     public boolean hasAccount(String account) {
         try {
-            getAccount(account);
+            getAccountCopy(account);
             return true;
         } catch (Exception e) {
             return false;
@@ -64,15 +76,22 @@ public class SimpleAntiBudget implements IAntiBudget{
 
     @Override
     public boolean hasAccount(IAccount account) {
-        return this.accountList.contains(account);
+        return this.accounts.containsKey(account.getName())
+                && this.accounts.get(account.getName()).equals(account);
     }
 
     @Override
     public List<IAccount> getAccounts() {
-        return this.accountList;
+        return new ArrayList<>(this.accounts.values());
     }
 
-    private IAccount checkAccount(IAccount account, boolean shouldHave) {
+    @Override
+    public IAntiBudget copy() {
+        return new SimpleAntiBudget(this.name, this.description, this.getAccounts());
+    }
+
+    private IAccount safeGetAccount(IAccount account, boolean shouldHave) {
+        Utils.checkNull(account);
         if (hasAccount(account) && !shouldHave) {
             throw new IllegalArgumentException(String.format(
                     "This budget already has this account: %s", account.getName()));
@@ -81,6 +100,6 @@ public class SimpleAntiBudget implements IAntiBudget{
             throw new IllegalArgumentException(String.format(
                     "This budget doesn't have this account: %s", account.getName()));
         }
-        return this.accountList.get(this.accountList.indexOf(account));
+        return this.accounts.get(account.getName());
     }
 }
