@@ -21,50 +21,63 @@ public interface IAccount {
 
     /**
      * Set the name of the account
-     * @param name the account's name
+     * @param name the account's name.
+     * @throws IllegalArgumentException if a null is provided.
      */
     void setName(String name);
 
     /**
      * Get the description of the account.
-     * @return the description of the account.
+     * @return the description of the account. If the account doesn't have a description,
+     * returns an empty string.
      */
     String getDescription();
 
     /**
      * set a new description for the budget account.
      * @param description the new description.
+     * @throws IllegalArgumentException if a null is provided.
      */
     void setDescription(String description);
 
     /**
      * Add a transaction to the account.
      * @param transaction the transaction to add.
+     * @throws IllegalArgumentException if a null is provided
+     * or the account already contains a transaction of the same name.
      */
     void addTransaction(ITransaction transaction);
 
+    /**
+     * Add a list of transactions.
+     * @param transactions the list of transactions to add.
+     * @throws IllegalArgumentException if any are null
+     * or share a name with a transaction already in the account
+     */
     void addTransactions(List<ITransaction> transactions);
 
     /**
      * Remove the transaction from the account.
      * @param transaction the transaction to remove.
-     * @throws IllegalArgumentException if the transaction does not exist in the account.
+     * @throws IllegalArgumentException if the transaction is null or is not in the account.
      */
     void removeTransaction(ITransaction transaction);
 
     /**
-     * Get a copy of the Itransaction with that name.
+     * Get a copy of the ITransaction with that name.
      * @param name the name of the transaction
      * @return A copy of the transaction object
-     * @throws IllegalArgumentException if there is no transaction of the given name.
+     * @throws IllegalArgumentException if there is no transaction of the given name
+     * or a null is given.
      */
     ITransaction getTransaction(String name);
 
     /**
-     * Get the reference to the Itransaction described.
+     * Get the reference to the ITransaction described.
      * @param transaction the transaction to look for.
-     * @return the reference to the Itransaction described for further editing.
-     * @throws IllegalArgumentException if there is no transaction of the given name.
+     * @return the reference to the ITransaction described for further editing.
+     * @throws IllegalArgumentException if there is no transaction of the given name
+     * or a null is provided.
      */
     ITransaction getTransaction(ITransaction transaction);
 

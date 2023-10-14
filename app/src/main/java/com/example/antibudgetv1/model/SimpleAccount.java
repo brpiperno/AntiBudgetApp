@@ -1,5 +1,6 @@
 package com.example.antibudgetv1.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,24 +11,25 @@ import java.util.stream.Collectors;
  * Needs to be able to get and set transaction data, according to both the name and value itself,
  * using a map implementation
  */
-public class Account implements IAccount{
+public class SimpleAccount implements IAccount{
     private String name;
     private String description;
     private Map<String, ITransaction> transactions;
 
-    public Account(String name, String description, List<ITransaction> transactions) {
+    public SimpleAccount(String name, String description, List<ITransaction> transactions) {
+        checkNull(name);
         this.name = name;
+        checkNull(description);
         this.description = description;
         this.transactions = new HashMap<>();
         for (ITransaction t : transactions) {
+            checkNull(t);
             this.transactions.put(t.getName(), t);
         }
     }
 
-    public Account(String name) {
-        this.name = name;
-        this.description = "";
-        this.transactions = new HashMap<>();
+    public SimpleAccount(String name) {
+        this(name, "", new ArrayList<ITransaction>());
     }
 
     @Override
@@ -71,6 +73,7 @@ public class Account implements IAccount{
 
     @Override
     public void removeTransaction(ITransaction transaction) {
+        checkNull(transaction);
         checkTransaction(transaction.getName());
         this.transactions.remove(transaction.getName());
     }

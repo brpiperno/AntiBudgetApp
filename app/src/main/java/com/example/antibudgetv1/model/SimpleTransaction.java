@@ -11,6 +11,8 @@ public class SimpleTransaction implements ITransaction{
     private String description; //The description of the transaction.
 
     public SimpleTransaction(String name, float value, String description) {
+        checkNull(name);
+        checkNull(description);
         this.name = name;
         this.value = value;
         this.description = description;

@@ -15,6 +15,7 @@ public interface ITransaction {
     /**
      * Set the name of the transaction.
      * @param name the name of the transaction.
+     * @throws IllegalArgumentException if a null is provided.
      */
     void setName(String name);
 
@@ -40,6 +41,7 @@ public interface ITransaction {
     /**
      * Set the description of the transaction.
      * @param description
+     * @throws IllegalArgumentException if a null is provided.
      */
     void setDescription(String description);
 }

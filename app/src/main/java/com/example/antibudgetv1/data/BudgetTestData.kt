@@ -1,9 +1,9 @@
 package com.example.antibudgetv1.data
 
-import com.example.antibudgetv1.model.Account
 import com.example.antibudgetv1.model.IAccount
 import com.example.antibudgetv1.model.IAntiBudget
 import com.example.antibudgetv1.model.ITransaction
+import com.example.antibudgetv1.model.SimpleAccount
 import com.example.antibudgetv1.model.SimpleAntiBudget
 import com.example.antibudgetv1.model.SimpleTransaction
 
@@ -26,11 +26,11 @@ val bankOfAmericaTransactions = listOf<ITransaction>(
     SimpleTransaction(
         "Utilities", -100f, "Includes Heat, Electricity, Internet"),
 )
-var bOAAccount:IAccount = Account(
+var bOAAccount:IAccount = SimpleAccount(
     "Bank of America", "Credit and Debit", bankOfAmericaTransactions)
-val discoverSavings:IAccount = Account(
+val discoverSavings:IAccount = SimpleAccount(
     "Discover Savings", "High Yield", discoverSavingsTransactions)
-val discoverCredit: IAccount = Account(
+val discoverCredit: IAccount = SimpleAccount(
     "Discover Credit", "Discover IT card", discoverCreditTransactions)
 
 val testBudget:IAntiBudget = SimpleAntiBudget(
