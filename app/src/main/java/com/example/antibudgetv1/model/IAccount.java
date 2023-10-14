@@ -70,7 +70,7 @@ public interface IAccount {
      * @throws IllegalArgumentException if there is no transaction of the given name
      * or a null is given.
      */
-    ITransaction getTransaction(String name);
+    ITransaction getTransactionCopy(String name);
 
     /**
      * Get the reference to the ITransaction described.
@@ -86,7 +86,7 @@ public interface IAccount {
      * @param name the name of the transaction
      * @return true if the account has a transaction of the given name, false otherwise.
      */
-    boolean hasTransaction(String name);
+    boolean hasTransactionOfName(String name);
 
     /**
      * Does the account have this exact transaction

@@ -62,6 +62,7 @@ public class SimpleAccount implements IAccount{
                     "Account: %s already contains transaction: %s",
                     this.name, name));
         }
+        this.transactions.put(transaction.getName(), transaction);
     }
 
     @Override
@@ -79,19 +80,22 @@ public class SimpleAccount implements IAccount{
     }
 
     @Override
-    public ITransaction getTransaction(String name) {
+    public ITransaction getTransactionCopy(String name) {
         checkTransaction(name);
-        return this.transactions.get(name);
+        ITransaction t = this.transactions.get(name);
+        ITransaction copy = new SimpleTransaction(t.getName(), t.getValue(), t.getDescription());
+        return copy;
     }
 
     @Override
     public ITransaction getTransaction(ITransaction transaction) {
+        checkNull(transaction);
         checkTransaction(transaction.getName());
         return this.transactions.get(transaction.getName());
     }
 
     @Override
-    public boolean hasTransaction(String name) {
+    public boolean hasTransactionOfName(String name) {
         checkNull(name);
         return this.transactions.containsKey(name);
     }
@@ -100,7 +104,7 @@ public class SimpleAccount implements IAccount{
     public boolean hasTransaction(ITransaction transaction) {
         checkNull(transaction);
         String name = transaction.getName();
-        return hasTransaction(name) && this.transactions.get(name).equals(transaction);
+        return hasTransactionOfName(name) && this.transactions.get(name).equals(transaction);
     }
 
     @Override
@@ -110,7 +114,7 @@ public class SimpleAccount implements IAccount{
 
     private void checkTransaction(String name) {
         checkNull(name);
-        if (!hasTransaction(name)) {
+        if (!hasTransactionOfName(name)) {
             throw new IllegalArgumentException(String.format(
                     "Account: %s does not contain transaction: %s",
                     this.name, name));

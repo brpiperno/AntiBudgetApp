@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.example.antibudgetv1.model.IAccount;
@@ -13,6 +14,7 @@ import com.example.antibudgetv1.model.ITransaction;
 import com.example.antibudgetv1.model.SimpleAccount;
 import com.example.antibudgetv1.model.SimpleTransaction;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,8 +35,8 @@ public class SimpleAccountTest {
         t2 = new SimpleTransaction(
                 "second transaction", 5f, "second description");
         t3 = new SimpleTransaction("third", 65f);
-        LoT1 = Arrays.asList(t1, t2);
-        LoT2 = Arrays.asList(t3);
+        LoT1 = new ArrayList<>(Arrays.asList(t1, t2));
+        LoT2 = new ArrayList<>(Arrays.asList(t3));
         a1 = new SimpleAccount("Savings Account", "High Yield Savings", LoT1);
         a2 = new SimpleAccount("Credit Card");
     }
@@ -93,7 +95,7 @@ public class SimpleAccountTest {
     @Test
     public void testAddTransaction() {
         a1.addTransaction(t3);
-        assertTrue(a1.getTransaction(t3).equals(t3));
+        assertTrue(a1.hasTransactionOfName(t3.getName()));
     }
 
     @Test (expected = IllegalArgumentException.class)
@@ -136,17 +138,63 @@ public class SimpleAccountTest {
     }
 
     @Test
-    public void testGetTransactionByString(){
-        assertTrue(a1.getTransaction("first transaction").equals(t1));
+    public void testGetTransactionCopy(){
+        ITransaction t4 = a1.getTransactionCopy("first transaction");
+        assertEquals(t4, a1.getTransaction(t1));
+        t4.setName("New Name");
+        assertNotEquals(t4, a1.getTransaction(t1));
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void testGetTransactionByStringInvalid() {
-        a1.getTransaction("invalid transaction");
+    public void testGetTransactionCopyInvalid() {
+        a1.getTransactionCopy("invalid transaction");
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void testGetTransactionByStringNull() {
-        a1.getTransaction((String) null);
+    public void testGetTransactionCopyNull() {
+        a1.getTransactionCopy((String) null);
+    }
+
+    @Test
+    public void testGetTransaction() {
+        ITransaction t4 = a1.getTransaction(t1);
+        assertEquals(t4, t1);
+        t4.setName("New Name");
+        assertEquals(t4, t1);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void testGetTransactionInvalid() {
+        a1.getTransaction(t3);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void testGetTransactionNull() {
+        a1.getTransaction(null);
+    }
+
+    @Test
+    public void testHasTransactionOfName() {
+        assertTrue(a1.hasTransactionOfName(t1.getName()));
+        assertFalse(a1.hasTransactionOfName(t3.getName()));
+    }
+
+    @Test
+    public void testHasTransaction() {
+        assertTrue(a1.hasTransaction(t1));
+        assertFalse(a1.hasTransaction(t3));
+    }
+
+    @Test
+    public void testGetTransactions() {
+        List<ITransaction> actual = a1.getTransactions();
+        for (ITransaction t: LoT1) {
+            assertTrue(actual.contains(t));
+        }
+        for (ITransaction t: actual) {
+            assertTrue(LoT1.contains(t));
+        }
+        IAccount emptyAccount = new SimpleAccount("new account");
+        assertTrue(emptyAccount.getTransactions().isEmpty());
     }
 }
