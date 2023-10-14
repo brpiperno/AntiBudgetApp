@@ -11,6 +11,32 @@ import java.util.List;
 public interface IAntiBudget {
 
     /**
+     * Get the name of the budget
+     * @return the budget name
+     */
+    String getName();
+
+    /**
+     * Set the name of the budget
+     * @param name the budget name.
+     * @throws IllegalArgumentException if a null is provided.
+     */
+    void setName(String name);
+
+    /**
+     * Get the description of the budget.
+     * @return the description of the budget.
+     */
+    String getDescription();
+
+    /**
+     * set a new description for the budget.
+     * @param description the new description.
+     * @throws IllegalArgumentException if a null is provided.
+     */
+    void setDescription(String description);
+
+    /**
      * Add a new account to the budget.
      * @param account the account to be added.
      * @throws IllegalArgumentException if account is null or account of same name is already there
@@ -44,15 +70,13 @@ public interface IAntiBudget {
      * Check if the budget has an account of the given name
      * @param name the name of the account.
      * @return true if the budget contains an account of the same name, false otherwise.
-     * @throws IllegalArgumentException if the name is null
      */
-    boolean hasAccount(String name);
+    boolean hasAccountWithName(String name);
 
     /**
      * Check if the budget has the provided account.
      * @param account the account to check for.
      * @return true if the budget contains an equal account, false otherwise.
-     * @throws IllegalArgumentException if the given account is null
      */
     boolean hasAccount(IAccount account);
 
@@ -60,11 +84,11 @@ public interface IAntiBudget {
      * Get a deep copy of all accounts in the budget.
      * @return a list of deep copies of the budget's accounts.
      */
-    List<IAccount> getAccounts();
+    List<IAccount> getCopyOfAccounts();
 
     /**
      * Make a deep copy of the budget.
-     * @return
+     * @return a deep copy of the budget.
      */
     IAntiBudget copy();
 }
