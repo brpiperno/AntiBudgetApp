@@ -1,4 +1,4 @@
-package com.example.antibudgetv1.model;
+package com.example.antibudgetv1.model.budget;
 
 import java.util.List;
 

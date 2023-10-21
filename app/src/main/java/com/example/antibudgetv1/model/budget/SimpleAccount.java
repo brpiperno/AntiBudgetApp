@@ -1,4 +1,4 @@
-package com.example.antibudgetv1.model;
+package com.example.antibudgetv1.model.budget;
 
 import com.example.antibudgetv1.Utils;
 

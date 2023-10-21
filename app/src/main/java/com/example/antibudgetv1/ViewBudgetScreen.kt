@@ -13,22 +13,22 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.antibudgetv1.data.discoverCreditTransactions
 import com.example.antibudgetv1.data.testBudget
-import com.example.antibudgetv1.model.IAntiBudget
-import com.example.antibudgetv1.model.ITransaction
+import com.example.antibudgetv1.model.budget.IBudget
+import com.example.antibudgetv1.model.budget.ITransaction
 
-@Preview
-@Composable
-fun TransactionCardPreview(modifier: Modifier = Modifier) {
-    TransactionCard(transaction = discoverCreditTransactions[1], modifier)
-}
+//@Preview
+//@Composable
+//fun TransactionCardPreview(modifier: Modifier = Modifier) {
+//    TransactionCard(transaction = discoverCreditTransactions[1], modifier)
+//}
 
 @Composable
 fun TransactionCard(transaction: ITransaction, modifier: Modifier = Modifier) {
@@ -75,42 +75,29 @@ fun BudgetViewPreview (modifier: Modifier = Modifier) {
     BudgetViewV2(testBudget)
 }
 
-//@OptIn(ExperimentalFoundationApi::class)
-//@Composable
-//fun BudgetView(account: IAccount, modifier: Modifier = Modifier) {
-//    //Showcase the Account Name and Description as applicable
-//    LazyColumn (
-//        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-//        verticalArrangement = Arrangement.spacedBy(4.dp),
-//        modifier = modifier
-//    ){
-//        stickyHeader {
-//            Text (text = "Header ${it + 1}",
-//                style = MaterialTheme.typography.titleMedium,
-//                modifier = modifier)
-//        }
-//        items(items = account.copyTransactions, itemContent = { item ->
-//            TransactionCard(transaction = item)
-//        })
-//    }
-//}
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun BudgetViewV2(budget: IAntiBudget, modifier: Modifier = Modifier) {
+fun BudgetViewV2(budget: IBudget, modifier: Modifier = Modifier) {
     //Generate a map of transactions keyed to the name of the account
     var transactionMap = mutableMapOf<String, List<ITransaction>>()
     budget.copyOfAccounts.forEach {
         transactionMap[it.name] = it.copyTransactions
     }
     
-    LazyColumn () {
+    LazyColumn (
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = modifier
+        ) {
         transactionMap.forEach { (accountName, transactionsList) ->
-            stickyHeader { 
-                Text(text= accountName,
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = modifier
-                )
+            stickyHeader {
+                Surface(Modifier.fillParentMaxWidth()) {
+                    Text(
+                        text = accountName,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = modifier
+                    )
+                }
             }
             items(transactionsList) {transaction ->
                 TransactionCard(transaction = transaction)

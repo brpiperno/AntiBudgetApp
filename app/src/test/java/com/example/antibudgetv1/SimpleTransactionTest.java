@@ -1,7 +1,7 @@
 package com.example.antibudgetv1;
 
-import com.example.antibudgetv1.model.ITransaction;
-import com.example.antibudgetv1.model.SimpleTransaction;
+import com.example.antibudgetv1.model.budget.ITransaction;
+import com.example.antibudgetv1.model.budget.SimpleTransaction;
 
 import org.junit.Before;
 import org.junit.Test;

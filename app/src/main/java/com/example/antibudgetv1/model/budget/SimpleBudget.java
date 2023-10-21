@@ -1,4 +1,4 @@
-package com.example.antibudgetv1.model;
+package com.example.antibudgetv1.model.budget;
 
 import com.example.antibudgetv1.Utils;
 
@@ -7,12 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SimpleAntiBudget implements IAntiBudget{
+public class SimpleBudget extends SimpleReadOnlyBudget implements IBudget  {
     private Map<String, IAccount> accounts;
     private String name;
     private String description;
 
-    public SimpleAntiBudget(String name, String description, List<IAccount> accounts) {
+    public SimpleBudget(String name, String description, List<IAccount> accounts) {
         this(name, description);
         this.accounts = new HashMap<>();
         for (IAccount a : accounts) {
@@ -20,7 +20,7 @@ public class SimpleAntiBudget implements IAntiBudget{
             this.addAccount(a);
         }
     }
-    public SimpleAntiBudget(String name, String description) {
+    public SimpleBudget(String name, String description) {
         Utils.checkNull(name);
         Utils.checkNull(description);
         this.name = name;
@@ -29,19 +29,9 @@ public class SimpleAntiBudget implements IAntiBudget{
     }
 
     @Override
-    public String getName() {
-        return this.name;
-    }
-
-    @Override
     public void setName(String name) {
         Utils.checkNull(name);
         this.name = name;
-    }
-
-    @Override
-    public String getDescription() {
-        return this.description;
     }
 
     @Override
@@ -61,16 +51,6 @@ public class SimpleAntiBudget implements IAntiBudget{
     public void deleteAccount(IAccount account) {
         Utils.checkNull(account);
         this.accounts.remove(safeGetAccount(account, true).getName());
-    }
-
-    @Override
-    public IAccount getAccountCopy(String name) {
-        Utils.checkNull(name);
-        if (hasAccountWithName(name)) {
-            return accounts.get(name).copy();
-        }
-        throw new IllegalArgumentException(
-                String.format("Does not contain account with name: %s", name));
     }
 
     @Override
@@ -96,8 +76,13 @@ public class SimpleAntiBudget implements IAntiBudget{
     }
 
     @Override
-    public IAntiBudget copy() {
-        return new SimpleAntiBudget(this.name, this.description, this.getCopyOfAccounts());
+    public IBudget copy() {
+        return new SimpleBudget(this.name, this.description, this.getCopyOfAccounts());
+    }
+
+    @Override
+    public List<String> getAccountNames() {
+        return new ArrayList<>(this.accounts.keySet());
     }
 
     @Override
@@ -105,7 +90,7 @@ public class SimpleAntiBudget implements IAntiBudget{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SimpleAntiBudget that = (SimpleAntiBudget) o;
+        SimpleBudget that = (SimpleBudget) o;
 
         if (!accounts.equals(that.accounts)) return false;
         if (!name.equals(that.name)) return false;

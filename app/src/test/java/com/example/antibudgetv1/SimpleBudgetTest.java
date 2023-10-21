@@ -5,12 +5,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.example.antibudgetv1.model.IAccount;
-import com.example.antibudgetv1.model.IAntiBudget;
-import com.example.antibudgetv1.model.ITransaction;
-import com.example.antibudgetv1.model.SimpleAccount;
-import com.example.antibudgetv1.model.SimpleAntiBudget;
-import com.example.antibudgetv1.model.SimpleTransaction;
+import com.example.antibudgetv1.model.budget.IAccount;
+import com.example.antibudgetv1.model.budget.IBudget;
+import com.example.antibudgetv1.model.budget.ITransaction;
+import com.example.antibudgetv1.model.budget.SimpleAccount;
+import com.example.antibudgetv1.model.budget.SimpleBudget;
+import com.example.antibudgetv1.model.budget.SimpleTransaction;
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SimpleAntiBudgetTest {
+public class SimpleBudgetTest {
 
-    IAntiBudget b1;
-    IAntiBudget b2;
+    IBudget b1;
+    IBudget b2;
     List<IAccount> LoA1;
     IAccount a1;
     IAccount a2;
@@ -45,8 +45,8 @@ public class SimpleAntiBudgetTest {
         a1 = new SimpleAccount("Savings Account", "High Yield Savings", LoT1);
         a2 = new SimpleAccount("Credit Card");
         LoA1 = new ArrayList<>(Arrays.asList(a1, a2));
-        b1 = new SimpleAntiBudget("test", "test budget", LoA1);
-        b2 = new SimpleAntiBudget("second", "second");
+        b1 = new SimpleBudget("test", "test budget", LoA1);
+        b2 = new SimpleBudget("second", "second");
     }
 
     @After
@@ -62,18 +62,18 @@ public class SimpleAntiBudgetTest {
 
     @Test (expected = IllegalArgumentException.class)
     public void testConstructorNullName() {
-        b1 = new SimpleAntiBudget(null, "test description");
+        b1 = new SimpleBudget(null, "test description");
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testConstructorNullDescription() {
-        b1 = new SimpleAntiBudget("name", null);
+        b1 = new SimpleBudget("name", null);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testConstructorNullAccount() {
         LoA1.add(null);
-        b1 = new SimpleAntiBudget("name", "description", LoA1);
+        b1 = new SimpleBudget("name", "description", LoA1);
     }
 
     @Test
@@ -196,9 +196,17 @@ public class SimpleAntiBudgetTest {
 
     @Test
     public void testCopy() {
-        IAntiBudget b3 = b1.copy();
+        IBudget b3 = b1.copy();
         assertEquals(b3, b1);
         b3.setName("new name");
         assertNotEquals(b3, b1);
+    }
+
+    @Test
+    public void testGetAccountNames() {
+        List<String> l = b1.getAccountNames();
+        assertEquals(2, l.size());
+        assertTrue(l.contains("Savings Account"));
+        assertTrue( l.contains("Credit Card"));
     }
 }

@@ -9,10 +9,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.example.antibudgetv1.model.IAccount;
-import com.example.antibudgetv1.model.ITransaction;
-import com.example.antibudgetv1.model.SimpleAccount;
-import com.example.antibudgetv1.model.SimpleTransaction;
+import com.example.antibudgetv1.model.budget.IAccount;
+import com.example.antibudgetv1.model.budget.ITransaction;
+import com.example.antibudgetv1.model.budget.SimpleAccount;
+import com.example.antibudgetv1.model.budget.SimpleTransaction;
 
 import java.util.ArrayList;
 import java.util.Arrays;

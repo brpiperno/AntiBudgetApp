@@ -1,38 +1,74 @@
 package com.example.antibudgetv1.data
 
-import com.example.antibudgetv1.model.IAccount
-import com.example.antibudgetv1.model.IAntiBudget
-import com.example.antibudgetv1.model.ITransaction
-import com.example.antibudgetv1.model.SimpleAccount
-import com.example.antibudgetv1.model.SimpleAntiBudget
-import com.example.antibudgetv1.model.SimpleTransaction
+import com.example.antibudgetv1.model.budget.IAccount
+import com.example.antibudgetv1.model.budget.IBudget
+import com.example.antibudgetv1.model.budget.ITransaction
+import com.example.antibudgetv1.model.budget.SimpleAccount
+import com.example.antibudgetv1.model.budget.SimpleBudget
+import com.example.antibudgetv1.model.budget.SimpleTransaction
 
 val discoverCreditTransactions = listOf<ITransaction>(
     SimpleTransaction("Groceries", -130f),
     SimpleTransaction(
-        "Car insurance", -120f, "estimated monthly, paid biannually"),
+        "Car insurance", -120f, "estimated monthly, paid biannually"
+    ),
     SimpleTransaction("Gas", -40f),
-    SimpleTransaction("Dance Classes", -60f)
+    SimpleTransaction(
+        "Dance Classes",
+        -60f
+    )
 )
 
 val discoverSavingsTransactions = listOf<ITransaction>(
-    SimpleTransaction("iRhythm income", 2400f, "take home pay, paid biweekly"),
-    SimpleTransaction("Roth IRA deposit", -650f),
+    SimpleTransaction(
+        "income",
+        2000f,
+        "take home pay, paid biweekly"
+    ),
+    SimpleTransaction(
+        "Retirement Savings",
+        -650f
+    ),
 )
 
 val bankOfAmericaTransactions = listOf<ITransaction>(
     SimpleTransaction(
-        "Rent", -1267f, "Rent is owed on the first of the month"),
+        "Rent",
+        -1200f,
+        "Owed on the first of the month"
+    ),
     SimpleTransaction(
-        "Utilities", -100f, "Includes Heat, Electricity, Internet"),
-)
-var bOAAccount:IAccount = SimpleAccount(
-    "Bank of America", "Credit and Debit", bankOfAmericaTransactions)
-val discoverSavings:IAccount = SimpleAccount(
-    "Discover Savings", "High Yield", discoverSavingsTransactions)
-val discoverCredit: IAccount = SimpleAccount(
-    "Discover Credit", "Discover IT card", discoverCreditTransactions)
+        "Utilities",
+        -100f,
+        "Heat, Electricity, Internet"
+    ),
+    SimpleTransaction("Date Night", -80f),
+    SimpleTransaction(
+        "Dog Sitting",
+        200f,
+        "Average Value"
+    )
 
-val testBudget:IAntiBudget = SimpleAntiBudget(
-    "Test Budget", "Version 1 of budget",
-    listOf<IAccount>(bOAAccount, discoverSavings, discoverCredit))
+)
+var bOAAccount: IAccount =
+    SimpleAccount(
+        "Bank of America", "Credit and Debit", bankOfAmericaTransactions
+    )
+val discoverSavings: IAccount =
+    SimpleAccount(
+        "Discover Savings", "High Yield", discoverSavingsTransactions
+    )
+val discoverCredit: IAccount =
+    SimpleAccount(
+        "Discover Credit", "Discover IT card", discoverCreditTransactions
+    )
+
+val testBudget: IBudget =
+    SimpleBudget(
+        "Test Budget", "Version 1 of budget",
+        listOf<IAccount>(
+            bOAAccount,
+            discoverSavings,
+            discoverCredit
+        )
+    )
