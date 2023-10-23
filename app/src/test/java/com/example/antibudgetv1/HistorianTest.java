@@ -1,5 +1,7 @@
 package com.example.antibudgetv1;
 
+import static org.junit.Assert.assertTrue;
+
 import com.example.antibudgetv1.model.budget.IAccount;
 import com.example.antibudgetv1.model.budget.IBudget;
 import com.example.antibudgetv1.model.budget.ITransaction;
@@ -8,17 +10,19 @@ import com.example.antibudgetv1.model.budget.SimpleBudget;
 import com.example.antibudgetv1.model.budget.SimpleTransaction;
 import com.example.antibudgetv1.model.historian.Historian;
 import com.example.antibudgetv1.model.historian.IHistorian;
-import com.example.antibudgetv1.model.historian.IReadOnlyHistorian;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class HistorianTest {
+
+    float DELTA = 0.0f;
 
     IBudget b1;
     IBudget b2;
@@ -30,7 +34,7 @@ public class HistorianTest {
     ITransaction t1;
     ITransaction t2;
     ITransaction t3;
-    IReadOnlyHistorian h1;
+    IHistorian h1;
 
     @Before
     public void start() {
@@ -46,7 +50,9 @@ public class HistorianTest {
         LoA1 = new ArrayList<>(Arrays.asList(a1, a2));
         b1 = new SimpleBudget("test", "test budget", LoA1);
         b2 = new SimpleBudget("second", "second");
-        //TODO: Initialize historian
+        h1 = new Historian(b1);
+        h1.addValue("Savings Account", 4321.50f, LocalDate.parse("2007-12-03"));
+        h1.addValue("Credit Card", 123456.78f, LocalDate.parse("2007-12-03"));
     }
 
     @After
@@ -57,13 +63,47 @@ public class HistorianTest {
     //TEST IREADONLYHISTORIAN METHODS
 
     @Test
-    void GetKnownValuesTest(){
+    public void ConstructorTest() {
+        IHistorian h2 = new Historian(b1);
 
     }
 
+    @Test
+    public void GetKnownValuesTest(){
+        assertTrue(h1.getKnownValues(
+                "Savings Account",
+                LocalDate.parse("2007-12-04"),
+                LocalDate.parse("2007-12-05")).isEmpty());
+        assertTrue(h1.getKnownValues(
+                "Credit Card",
+                LocalDate.parse("2007-12-03"),
+                LocalDate.parse("2007-12-03")).containsValue(123456.78f));
+    }
+
     @Test (expected = IllegalArgumentException.class)
-    void GetKnownValuesTestInvalid(){
-        h1.getKnownValues("Nonsense account");
+    public void GetKnownValuesTestNullStartDate() {
+        h1.getKnownValues("string", null, LocalDate.parse("2007-12-03"));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void GetKnownValuesTestNullEndDate() {
+        h1.getKnownValues("string", LocalDate.parse("2007-12-03"), null);
+    }
+
+    @Test
+    public void AddValueTest() {
+        h1.addValue("Credit Card", 5004.34f, LocalDate.parse("2007-12-08"));
+        //TODO: write assert test to compare
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void AddValueNullAccount() {
+        h1.addValue(null, 5004.34f, LocalDate.parse("2007-12-08"));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void AddValueNullDate() {
+        h1.addValue("Credit Card", 5004.34f, null);
     }
 
 
