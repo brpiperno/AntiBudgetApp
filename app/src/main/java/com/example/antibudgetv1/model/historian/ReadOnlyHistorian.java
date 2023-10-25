@@ -3,12 +3,14 @@ package com.example.antibudgetv1.model.historian;
 import com.example.antibudgetv1.Utils;
 import com.example.antibudgetv1.model.budget.IReadOnlyBudget;
 
+import org.apache.commons.math3.analysis.UnivariateFunction;
+import org.apache.commons.math3.analysis.interpolation.UnivariateInterpolator;
+
 import java.time.chrono.ChronoLocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.Map;
+import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -24,7 +26,7 @@ public class ReadOnlyHistorian implements IReadOnlyHistorian{
         Utils.checkDateRange(start, end);
         Predicate<ChronoLocalDate> inRange = s -> ((s.isAfter(start) || s.isEqual(start))
                         && (s.isEqual(end) || s.isBefore(end)));
-        return values.get(account)
+        return Objects.requireNonNull(values.get(account))
                 .entrySet()
                 .stream()
                 .filter(d -> inRange.test(d.getKey()))
@@ -42,15 +44,24 @@ public class ReadOnlyHistorian implements IReadOnlyHistorian{
     }
 
     @Override
-    public SortedMap<ChronoLocalDate, Float>
-    getValues(String account, ChronoLocalDate start, ChronoLocalDate end, ChronoUnit unit,
-              Function<SortedMap<ChronoLocalDate, Float>, SortedMap<ChronoLocalDate, Float>> func) {
+    public UnivariateFunction getValues(String account, UnivariateInterpolator interpolator) {
         checkAccount(account);
-        Utils.checkDateRange(start, end);
-        Utils.checkNull(unit);
-        Utils.checkNull(func);
-        return func.apply(this.values.get(account));
+        Utils.checkNull(interpolator);
+
+        SortedMap<ChronoLocalDate, Float> actualized = this.values.get(account);
+        assert actualized != null;
+        int size = actualized.size();
+        double[] datesAsDouble = new double[size];
+        double[] valuesAsDouble = new double[size];
+
+        int current = 0;
+        for (Map.Entry<ChronoLocalDate, Float> e : actualized.entrySet()) {
+            datesAsDouble[current] = e.getKey().toEpochDay();
+            valuesAsDouble[current] = e.getValue();
+        }
+        return interpolator.interpolate(datesAsDouble, valuesAsDouble);
     }
+
 
     /**
      * Check if the account exists.

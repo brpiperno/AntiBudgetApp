@@ -1,8 +1,5 @@
 package com.example.antibudgetv1.model.historian;
 
-import com.example.antibudgetv1.model.budget.IReadOnlyBudget;
-
-import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
 
 /**
@@ -31,4 +28,10 @@ public interface IHistorian extends IReadOnlyHistorian{
      * @throws IllegalArgumentException if there is no value for that date and account.
      */
     void deleteValue(String account, ChronoLocalDate date);
+
+    /**
+     * Sync the historian to the accounts in the budget
+     * @param deleteUnused should the historian delete any accounts that are not in the budget?
+     */
+    void updateAccounts(boolean deleteUnused);
 }

@@ -1,9 +1,10 @@
 package com.example.antibudgetv1.model.historian;
 
+import org.apache.commons.math3.analysis.UnivariateFunction;
+import org.apache.commons.math3.analysis.interpolation.UnivariateInterpolator;
+
 import java.time.chrono.ChronoLocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.SortedMap;
-import java.util.function.Function;
 
 /**
  * Representation of a read-only historian that manages historical values of a budget.
@@ -13,20 +14,19 @@ import java.util.function.Function;
  * In App, the user uses the historian to:
  * - Add Values
  * - Delete Values
- * - View Trends (either interpolating or extrapolating)
+ * - View Values
  * - Load Data from external .csv files
  */
 public interface IReadOnlyHistorian {
 
     /**
-     * Return a map of dates and associated values that belong to an account and fall within a range.
+     * Return a map of date-balances for an account
      * @param account the account name to get values.
      * @param start the inclusive start date.
      * @param end the inclusive end date.
-     * @return a sorted map of all actualized values
+     * @return a navigable map of date and balance values
      */
-    SortedMap<ChronoLocalDate, Float> getKnownValues(
-            String account, ChronoLocalDate start, ChronoLocalDate end);
+    SortedMap<ChronoLocalDate, Float> getKnownValues(String account, ChronoLocalDate start, ChronoLocalDate end);
 
     /**
      * Make the historian update the list of accounts it has awareness of according to it's budget.
@@ -36,23 +36,12 @@ public interface IReadOnlyHistorian {
     void updateAccounts();
 
     /**
-     * Trend values for a given account. Extrapolates and Interpolates according to the function.
+     * Provide a spline function that represents interpolated values.
      * @param account the account to trend values for.
-     * @param start the start date (inclusive).
-     * @param end the end date (inclusive).
-     * @param unit the time period between data points.
-     *             As units are date specific and represent personal accounting, \
-     *             options are DAY, WEEK, MONTH, YEAR, DECADE
-     * @param func the function used to determine interpolation and extrapolation, as required.
-     * @return A sorted map of values,
-     * some being logged values, some being interpolated, and some extrapolated.
-     * @throws IllegalStateException if a ChronoUnit other than DAY, WEEK, YEAR, or DECADE is used.
+     * @param interpolator the function used to interpolate between actualized values.
+     * @return A spline that represents the the value of the account as the y axis,
+     * with the x axis being a simple incrementing count of days where day 0 is 1970-01-01 (ISO)
      * @throws IllegalArgumentException if the account isn't in the historian.
-     * @throws IllegalStateException if there aren't sufficient data-points present
-     * to interpolate or extrapolate
      */
-    SortedMap<ChronoLocalDate, Float> getValues(
-            String account, ChronoLocalDate start, ChronoLocalDate end,
-            ChronoUnit unit, Function<SortedMap<ChronoLocalDate, Float>,
-            SortedMap<ChronoLocalDate, Float>> func);
+    UnivariateFunction getValues(String account, UnivariateInterpolator interpolator);
 }
