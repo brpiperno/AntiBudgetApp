@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AntiBudgetV1</string>
+    <string name="budget">Budget Breakdown</string>
+    <string name="back_button">Back</string>
 </resources>

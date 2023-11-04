@@ -1,4 +1,4 @@
-package com.example.antibudgetv1
+package com.example.antibudgetv1.ui.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -20,15 +20,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.antibudgetv1.data.discoverCreditTransactions
 import com.example.antibudgetv1.data.testBudget
 import com.example.antibudgetv1.model.budget.IBudget
 import com.example.antibudgetv1.model.budget.ITransaction
 
-//@Preview
-//@Composable
-//fun TransactionCardPreview(modifier: Modifier = Modifier) {
-//    TransactionCard(transaction = discoverCreditTransactions[1], modifier)
-//}
+@Preview
+@Composable
+fun TransactionCardPreview(modifier: Modifier = Modifier) {
+    TransactionCard(transaction = discoverCreditTransactions[1], modifier)
+}
 
 @Composable
 fun TransactionCard(transaction: ITransaction, modifier: Modifier = Modifier) {
